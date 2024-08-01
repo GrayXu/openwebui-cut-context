@@ -1,9 +1,9 @@
 """
 title: Cut the context of historical conversation turns
 
-author: grayxu
-author_url: https://github.com/grayxu
-funding_url: https://github.com/grayxu
+author: GrayXu
+author_url: https://github.com/GrayXu
+funding_url: https://github.com/GrayXu/openwebui-cut-context
 version: 0.1
 """
 
