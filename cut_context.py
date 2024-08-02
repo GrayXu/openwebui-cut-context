@@ -4,7 +4,7 @@ title: Cut the context of historical conversation turns
 author: GrayXu
 author_url: https://github.com/GrayXu
 funding_url: https://github.com/GrayXu/openwebui-cut-context
-version: 0.1
+version: 0.1.1
 """
 
 from pydantic import BaseModel, Field
@@ -39,8 +39,7 @@ class Filter:
 
     def inlet(self, body: dict, __user__: Optional[dict] = None) -> dict:
         print(f"inlet:{__name__}")
-        print(f"inlet:body:{body}")
-        print(f"inlet:user:{__user__}")
+        # print(f"(before) inlet:body:{body}")
 
         if __user__.get("role", "admin") in ["user", "admin"]:
             messages = body.get("messages", [])
@@ -53,9 +52,16 @@ class Filter:
             num_tail = 1 + tail_turns * 2  # 1 for the role input
 
             # Cut the messages
+            system_prompt = next(
+                (message for message in messages if message.get("role") == "system"), None
+            )
+
             if len(messages) > num_head + num_tail:
                 body["messages"] = messages[:num_head] + messages[-num_tail:]
+            if system_prompt:
+                body["messages"].insert(0, system_prompt)
 
+        # print(f"(after) inlet:body:{body}")
         return body
 
     def outlet(self, body: dict, __user__: Optional[dict] = None) -> dict:
